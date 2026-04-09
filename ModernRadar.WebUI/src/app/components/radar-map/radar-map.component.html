@@ -1,0 +1,53 @@
+<div class="relative w-full h-full">
+  <!-- Map Container -->
+  <div id="radar-map" class="absolute inset-0 z-0"></div>
+
+  <!-- Glassmorphism Overlay Panel -->
+  <div
+    class="absolute top-4 left-4 z-10 w-80 max-h-[90vh] overflow-hidden flex flex-col rounded-2xl bg-black/40 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.5)] text-white/90 transition-all">
+
+    <!-- Header -->
+    <div class="p-5 border-b border-white/10">
+      <h1 class="text-2xl font-bold tracking-tight text-white flex items-center justify-between">
+        ModernRadar
+        <span class="relative flex h-3 w-3">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-3 w-3 bg-cyan-500"></span>
+        </span>
+      </h1>
+      <p class="text-sm text-cyan-400 mt-1 font-medium">{{ activeCount }} Active Flights</p>
+    </div>
+
+    <!-- Active Flight List -->
+    <div class="flex-1 overflow-y-auto p-3 space-y-2 custom-scrollbar">
+      <div *ngFor="let ac of activeFlights"
+        class="p-3 bg-white/5 rounded-xl border border-white/5 hover:bg-white/10 transition-colors duration-200">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="font-bold text-base text-gray-100">{{ ac.callsign || ac.hex }}</p>
+            <p class="text-xs text-gray-400">{{ ac.registration || 'N/A' }} &bull; {{ ac.model || 'N/A' }}</p>
+          </div>
+          <div class="text-right">
+            <p class="text-sm font-semibold text-cyan-300">{{ ac.altitude || 0 }} <span
+                class="text-[10px] text-gray-400">ft</span></p>
+            <p class="text-xs text-gray-400">{{ ac.speed || 0 }} kts</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div *ngIf="activeCount === 0" class="text-center p-6 text-gray-500 text-sm">
+        <svg class="w-12 h-12 mx-auto mb-3 opacity-20" fill="currentColor" viewBox="0 0 24 24">
+          <path
+            d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z" />
+        </svg>
+        Searching for airborne signals...
+      </div>
+    </div>
+  </div>
+
+  <app-aircraft-details-sidebar [aircraft]="selectedFlight" [details]="selectedDetails"
+    [isLoadingDetails]="isLoadingDetails" (close)="deselectAircraft()">
+  </app-aircraft-details-sidebar>
+
+</div>

@@ -1,0 +1,52 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>dotnet-ModernRadar.Host-c2ed5544-fc6a-4952-b1bd-e18e815617ce</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ModernRadar.Infrastructure\ModernRadar.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="BaseStation.sqb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="StandingData.sqb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <PropertyGroup>
+    <SpaRoot>..\ModernRadar.WebUI\</SpaRoot>
+  </PropertyGroup>
+
+  <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition="!Exists('$(SpaRoot)node_modules')">
+    <Message Importance="high" Text="npm paketleri bulunamadı. Kurulum yapılıyor, bu biraz sürebilir..." />
+    <Exec Command="node --version" ContinueOnError="true">
+      <Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
+    </Exec>
+    <Error Condition="'$(ErrorCode)' != '0'" Text="Node.js kurulu değil. Angular uygulamasını derlemek için Node.js şart." />
+    <Exec WorkingDirectory="$(SpaRoot)" Command="npm install" />
+  </Target>
+
+  <Target Name="BuildAngularUI" BeforeTargets="Build">
+    <Message Importance="high" Text="Angular UI derleniyor. Çıktılar angular.json ayarlarına göre doğrudan wwwroot içine gidecek..." />
+    <Exec WorkingDirectory="$(SpaRoot)" Command="npm run build -- --configuration production" />
+  </Target>
+
+  <Target Name="PublishSpaAssets" AfterTargets="ComputeFilesToPublish">
+    <ItemGroup>
+      <DistFiles Include="wwwroot\**\*.*" />
+      <ResolvedFileToPublish Include="@(DistFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
+        <RelativePath>wwwroot\%(RecursiveDir)%(Filename)%(Extension)</RelativePath>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        <ExcludeFromSingleFile>false</ExcludeFromSingleFile>
+      </ResolvedFileToPublish>
+    </ItemGroup>
+  </Target>
+
+</Project>

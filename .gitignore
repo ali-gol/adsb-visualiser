@@ -1,0 +1,71 @@
+# =========================
+# .NET / C# (Backend)
+# =========================
+# Derleme çıktıları
+[Bb]in/
+[Oo]bj/
+
+# Visual Studio & Rider
+.vs/
+.idea/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# NuGet Paketleri
+packages/
+*.nupkg
+*.snupkg
+
+# Test sonuçları ve loglar
+TestResults/
+*.log
+
+# (Opsiyonel) Yerel ayar dosyalarını git'e atmamak için başlarındaki '#' işaretini kaldırabilirsin
+# appsettings.Development.json
+# appsettings.Local.json
+
+
+# =========================
+# Angular / Node.js (Frontend)
+# =========================
+# Bağımlılıklar
+node_modules/
+
+# Derleme ve Build Çıktıları
+dist/
+tmp/
+out-tsc/
+bazel-out/
+
+# Angular önbelleği (Angular 13+ ile gelen cache)
+.angular/
+
+# Test ve Coverage Raporları
+coverage/
+
+# Hata logları
+npm-debug.log
+yarn-error.log
+yarn-debug.log
+
+# (Opsiyonel) Sadece senin bilgisayarında kalması gereken local environment ayarları
+src/environments/environment.local.ts
+
+
+# =========================
+# İşletim Sistemi ve IDE (Genel)
+# =========================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# VS Code (Genellikle ayarların git'te olması istenir ama kişisel ayarlar varsa klasörü yoksayabilirsin)
+# .vscode/

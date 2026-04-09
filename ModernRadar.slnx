@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="ModernRadar.ConsoleClient/ModernRadar.ConsoleClient.csproj" />
+  <Project Path="ModernRadar.Core/ModernRadar.Core.csproj" />
+  <Project Path="ModernRadar.Host/ModernRadar.Host.csproj" />
+  <Project Path="ModernRadar.Infrastructure/ModernRadar.Infrastructure.csproj" />
+  <Project Path="ModernRadar.Simulator/ModernRadar.Simulator.csproj" />
+</Solution>
