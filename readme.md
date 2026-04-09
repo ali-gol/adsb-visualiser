@@ -44,7 +44,7 @@ The system resolves aircraft metadata, flight routes, and airline information in
 * If you just want to run the application, you don't need any of these. Since, this is compiled standalone. all you have to do is just run `.\ModernRadar.Host`. But if you want to download the source code, and compile by yourself, steps are below:
 * [.NET 10 SDK](https://dotnet.microsoft.com/)
 * [Node.js and npm](https://nodejs.org/) (Only for building the frontend)
-* An RTL-SDR dongle.
+* An RTL-SDR dongle (not needed, since there is a dump1090 simulator project in solution).
 * **CRITICAL:** A background instance of `dump1090` (or a similar tool like `readsb`) must be running and actively broadcasting BaseStation formatted data on TCP Port 30003.
 * Virtual Radar Server (VRS) database files: `BaseStation.sqb` and `StandingData.sqb`.
 
