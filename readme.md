@@ -65,7 +65,6 @@ Update the `appsettings.json` file in the Backend project with your specific fil
 ```
 
 ### 3. Build the Frontend (One-time Setup)
-You don't have to build it manually. Once, host project is built, front-end will be built automatically.
 The frontend app is configured to output its build files directly into the .NET project's `wwwroot` directory.
 Open a terminal in the Angular directory and run:
 ```bash
@@ -94,4 +93,18 @@ dotnet run --port 8080
 
 ## 📂 Data Architecture (How it Works)
 
-The system parses raw TCP lines (e.g., `MSG,3,
+The system parses raw TCP lines (e.g., `MSG,3,111,111,4B8429,10000,38.5,27.1,,,`) and enriches them in the following order:
+
+1. **Country Detection:** The Hex code (`4B8429`) is matched against the `CodeBlock` table in `StandingData.sqb` using bitmasking to mathematically determine the registration country (e.g., Turkey).
+2. **Aircraft Metadata:** The Hex code is queried in `BaseStation.sqb` to fetch the Registration (e.g., `TC-AAI`), Aircraft Type (`B738`), and Owner (`Pegasus Airlines`).
+3. **Full Model Name:** The short type (`B738`) is joined with tables in `StandingData.sqb` (`AircraftType`, `Model`, `Manufacturer`) to resolve the full commercial name: "Boeing 737-800".
+4. **Route Details:** If the aircraft broadcasts a Callsign (e.g., `PGT2816`), `StandingData.sqb` resolves the origin (`ADB`) and destination (`ISL`) airports.
+
+---
+
+## 📂 ADSB Emulator
+The time i was developing this app, i didn't have up and running adsb receiver. So, ModernRadar.Simulator project is just dummy aircrafts pushing to tcp 30003. 
+
+## 👨‍💻 Developer
+**Ali (TB3ARY)** - Amateur Radio Operator & Software Developer.  
+*Passionate about off-grid communications, RF technologies, and full-stack engineering.*
