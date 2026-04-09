@@ -4,7 +4,7 @@ on:
   workflow_dispatch: # Manual trigger only
 
 permissions:
-  contents: write
+  contents: write # Essential for creating releases and tags
 
 jobs:
   # STEP 1: Build Frontend assets once and prepare wwwroot
@@ -31,7 +31,7 @@ jobs:
           name: compiled-wwwroot
           path: ModernRadar.Host/wwwroot/
 
-  # STEP 2: Parallel publish for all target platforms
+  # STEP 2: Parallel publish for all supported target platforms
   build-and-release:
     needs: prepare-assets
     runs-on: ubuntu-latest
@@ -62,10 +62,46 @@ jobs:
       - name: Publish (Single File)
         run: |
           cd ModernRadar.Host
-          # We skip BuildAngularUI target because we already provided the compiled assets
           dotnet publish -c Release -r ${{ matrix.rid }} --self-contained true -p:PublishSingleFile=true -p:BuildAngularUI=false -o ../publish/${{ matrix.rid }}
 
       - name: Zip Release Files
         run: |
           cd publish/${{ matrix.rid }}
-          zip -r
+          zip -r ../../ModernRadar-${{ matrix.rid }}.zip .
+
+      - name: Upload Per-Platform Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: zip-${{ matrix.rid }}
+          path: ModernRadar-${{ matrix.rid }}.zip
+
+  # STEP 3: Aggregate all binaries and create the GitHub Release
+  create-release:
+    needs: build-and-release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download All Zips
+        uses: actions/download-artifact@v4
+        with:
+          path: all-zips
+          pattern: zip-*
+          merge-multiple: true
+
+      - name: Set Release Tag
+        id: vars
+        run: echo "tag=v1.0.${{ github.run_number }}" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.vars.outputs.tag }}
+          name: Release ${{ steps.vars.outputs.tag }}
+          files: all-zips/*.zip
+          generate_release_notes: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+          body: |
+            🚀 **ModernRadar Production Build**
+            
+            Multi-platform standalone binaries for ModernRadar.
+            - Includes embedded Angular frontend.
+            - No .NET runtime required (Self-contained).
