@@ -42,7 +42,6 @@ jobs:
           - osx-x64
           - osx-arm64
           - linux-x64
-          - linux-x86
           - linux-arm
           - linux-arm64
     steps:
