@@ -5,6 +5,7 @@ ModernRadar is a modern Virtual Radar application that tracks air traffic using 
 The system resolves aircraft metadata, flight routes, and airline information in milliseconds via local SQLite databases (`BaseStation.sqb` and `StandingData.sqb`) using pure ADO.NET. It is built to operate at full capacity even in remote, off-grid locations without internet access.
 
 ---
+![Main Dashboard](./screenshot/ss1.jpg)
 
 ## ✨ Key Features
 
