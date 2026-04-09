@@ -41,6 +41,7 @@ The system resolves aircraft metadata, flight routes, and airline information in
 ## 🚀 Installation & Setup
 
 ### 1. Prerequisites
+* If you just want to run the application, you don't need any of these. Since, this is compiled standalone. all you have to do is just run `.\ModernRadar.Host`. But if you want to download the source code, and compile by yourself, steps are below:
 * [.NET 10 SDK](https://dotnet.microsoft.com/)
 * [Node.js and npm](https://nodejs.org/) (Only for building the frontend)
 * An RTL-SDR dongle.
