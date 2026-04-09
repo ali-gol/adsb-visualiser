@@ -65,6 +65,7 @@ Update the `appsettings.json` file in the Backend project with your specific fil
 ```
 
 ### 3. Build the Frontend (One-time Setup)
+You don't have to build it manually. Once, host project is built, front-end will be built automatically.
 The frontend app is configured to output its build files directly into the .NET project's `wwwroot` directory.
 Open a terminal in the Angular directory and run:
 ```bash
