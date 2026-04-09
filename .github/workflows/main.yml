@@ -1,15 +1,13 @@
 name: Build and Release ModernRadar
 
 on:
-  push:
-    branches:
-      - master
+  workflow_dispatch: # Manual trigger only
 
 permissions:
   contents: write
 
 jobs:
-  # 1. ADIM: Frontend build al ve wwwroot'u hazırla
+  # STEP 1: Build Frontend assets once and prepare wwwroot
   prepare-assets:
     runs-on: ubuntu-latest
     steps:
@@ -26,7 +24,6 @@ jobs:
           cd ModernRadar.WebUI
           npm ci
           npm run build -- --configuration production
-        # Not: Build çıktısının ModernRadar.Host/wwwroot klasörüne gittiğinden emin ol
 
       - name: Upload Prepared wwwroot
         uses: actions/upload-artifact@v4
@@ -34,7 +31,7 @@ jobs:
           name: compiled-wwwroot
           path: ModernRadar.Host/wwwroot/
 
-  # 2. ADIM: Tüm platformlar için publish yap
+  # STEP 2: Parallel publish for all target platforms
   build-and-release:
     needs: prepare-assets
     runs-on: ubuntu-latest
@@ -66,44 +63,10 @@ jobs:
       - name: Publish (Single File)
         run: |
           cd ModernRadar.Host
-          # CSPROJ içindeki BuildAngularUI target'ını atlıyoruz çünkü biz zaten build aldık
+          # We skip BuildAngularUI target because we already provided the compiled assets
           dotnet publish -c Release -r ${{ matrix.rid }} --self-contained true -p:PublishSingleFile=true -p:BuildAngularUI=false -o ../publish/${{ matrix.rid }}
 
       - name: Zip Release Files
         run: |
           cd publish/${{ matrix.rid }}
-          zip -r ../../ModernRadar-${{ matrix.rid }}.zip .
-
-      - name: Upload Per-Platform Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: zip-${{ matrix.rid }}
-          path: ModernRadar-${{ matrix.rid }}.zip
-
-  # 3. ADIM: Tüm dosyaları tek bir Release altında topla
-  create-release:
-    needs: build-and-release
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download All Zips
-        uses: actions/download-artifact@v4
-        with:
-          path: all-zips
-          pattern: zip-*
-          merge-multiple: true
-
-      - name: Generate Release Tag
-        run: echo "RELEASE_TAG=v1.0.${{ github.run_number }}" >> $GITHUB_ENV
-
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ env.RELEASE_TAG }}
-          name: Release ${{ env.RELEASE_TAG }}
-          files: all-zips/*.zip
-          body: |
-            🚀 **ModernRadar Auto-Release**
-            
-            Multi-platform binaries built with .NET 10.
-            - Windows, macOS, Linux (x64, ARM)
-            - Fully standalone (Self-contained)
+          zip -r
